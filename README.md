@@ -2,7 +2,7 @@
 
 ## Basic 
 
-* Download "OTMSIG.7z", and use 7-Zip to unzip the folder. 
+* Download "OTMSIG.7z", and use 7-Zip to unzip the folder. Alternatively, download the entire repository and open the "OTMSIG" folder. 
 * Place a DICOM-RT Plan file into the folder. 
 * Run "OTMSIG.bat" and enter the original DICOM-RT file's name at the prompt. 
 * The script will create 20 variations of this plan, in which all beams will have altered MU, Collimator angles, Leaf or Jaw positions as specified in the output filenames. 
