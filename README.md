@@ -12,6 +12,7 @@
 
 More variations can be achieved by modifying the contents of the .bat file, or by running mangle.exe from the command line. The "mangle.py Detailed Instructions" document details what command line options are available, the format that they must be entered in, and some examples. 
 
+Alternatively a user interface has been developed to provide the same functionality without using the command line, instructions for the use of this can be found in "mangle UI Detailed Instructions".
 
 ## Advanced
 
