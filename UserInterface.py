@@ -257,7 +257,7 @@ class MyFrame(wx.Frame):
                         leafpair = 'lp' + self.leafPairFrom.GetValue()
                 position = ''
                 if self.leaf_relative.GetValue():
-                    postion = 'pr=' + self.leaf_position.GetValue()
+                    position = 'pr=' + self.leaf_position.GetValue()
                 else:
                     position = 'pa=' + self.leaf_position.GetValue()
 
