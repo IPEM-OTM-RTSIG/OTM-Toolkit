@@ -59,7 +59,7 @@ using the filters.
 """
 
 # Open DICOM File in pydicom and retrieve a dataset:
-ds = pydicom.dcmread(args.inFile, force = True)
+ds = pydicom.dcmread(args.inFile)
 
 # Unless Instructed, change the file's UID to prevent duplicates. 
 if not args.keep_uid:
@@ -205,24 +205,29 @@ for cmdStr in args.commandString:
         if s["name"] == "MU":
             for beam in beams:
                 cmdArg = reArg
-                if ds.BeamSequence[beam.BeamNumber - 1].TreatmentDeliveryType != "SETUP":
-                    meterset = ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset
-                    if cmdArg[0] == "+":
-                        cmdArg = cmdArg[1:]
-                        if cmdArg[-1] == "%":
-                            cmdArg = cmdArg[:-1]
-                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset = meterset * (1+(float(cmdArg)/100))
-                        else:
-                            meterset = meterset + cmdArg
-                    elif cmdArg[0] == "-":
-                        cmdArg = cmdArg[1:]
-                        if cmdArg[-1] == "%":
-                            cmdArg = cmdArg[:-1]
-                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset = meterset * (1-(float(cmdArg)/100))
-                        else:
-                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset = meterset - cmdArg
+
+                ReferencedBeamSequence = ds.FractionGroupSequence[0].ReferencedBeamSequence
+                beamIndex = 0
+                for refBeam in ReferencedBeamSequence:
+                    if refBeam.ReferencedBeamNumber == beam.BeamNumber:
+                       beamIndex = ReferencedBeamSequence.index(refBeam)
+                meterset = ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset       
+                if cmdArg[0] == "+":
+                    cmdArg = cmdArg[1:]
+                    if cmdArg[-1] == "%":
+                        cmdArg = cmdArg[:-1]
+                        ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset = meterset * (1+(float(cmdArg)/100))
                     else:
-                         meterset = cmdArg
+                        ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset = meterset + float(cmdArg)
+                elif cmdArg[0] == "-":
+                    cmdArg = cmdArg[1:]
+                    if cmdArg[-1] == "%":
+                        cmdArg = cmdArg[:-1]
+                        ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset = meterset * (1-(float(cmdArg)/100))
+                    else:
+                        ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset = meterset - float(cmdArg)
+                else:
+                    meterset = cmdArg
         elif s["name"] == "Machine":
             for beam in beams:
                 cmdArg = reArg
