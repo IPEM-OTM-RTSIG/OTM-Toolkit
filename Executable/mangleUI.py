@@ -156,21 +156,27 @@ def mangle(inFile, outFile, keep_uid, verbose, commandString):
             if s["name"] == "MU":
                 for beam in beams:
                     cmdArg = reArg
-                    meterset = ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset
+
+                    ReferencedBeamSequence = ds.FractionGroupSequence[0].ReferencedBeamSequence
+                    beamIndex = 0
+                    for refBeam in ReferencedBeamSequence:
+                        if refBeam.ReferencedBeamNumber == beam.BeamNumber:
+                           beamIndex = ReferencedBeamSequence.index(refBeam)
+                    meterset = ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset       
                     if cmdArg[0] == "+":
                         cmdArg = cmdArg[1:]
                         if cmdArg[-1] == "%":
                             cmdArg = cmdArg[:-1]
-                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset = meterset * (1+(float(cmdArg)/100))
+                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset = meterset * (1+(float(cmdArg)/100))
                         else:
-                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset = meterset + float(cmdArg)
+                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset = meterset + float(cmdArg)
                     elif cmdArg[0] == "-":
                         cmdArg = cmdArg[1:]
                         if cmdArg[-1] == "%":
                             cmdArg = cmdArg[:-1]
-                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset = meterset * (1-(float(cmdArg)/100))
+                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset = meterset * (1-(float(cmdArg)/100))
                         else:
-                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beam.BeamNumber - 1].BeamMeterset = meterset - float(cmdArg)
+                            ds.FractionGroupSequence[0].ReferencedBeamSequence[beamIndex].BeamMeterset = meterset - float(cmdArg)
                     else:
                         meterset = cmdArg
             elif s["name"] == "Machine":
